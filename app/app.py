@@ -296,7 +296,7 @@ class SQL:
         retList = []
         for s in self.cur.fetchall():
             row = {}
-            for (colname, cast), value in zip(self.tables[table].items(), s):
+            for (colname, cast), value in zip(self.tables.get(table).items(), s):
                 row.update({colname: self.typeCast(value, cast)[0]})
             retList.append(row)
         return retList
