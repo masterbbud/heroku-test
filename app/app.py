@@ -144,10 +144,6 @@ def remove_accounts():
     sql.dropTable('accounts')
     return 'Removed Accounts'
 
-@app.route("/sql-tables")
-def sql_tables():
-    return sql.tables + ct
-
 @app.route("/get-account-data", methods=['POST'])
 def account_data():
     args = request.json
@@ -159,9 +155,9 @@ def account_data():
     else:
         return user_data(token)
 
-@app.route("/get-count")
-def get_count():
-    return ct
+@app.route("/test-columns")
+def test_columns():
+    return sql.selectColumns('accounts')
 
 def get_auth_token():
     return secrets.token_urlsafe(20)
@@ -172,8 +168,6 @@ def auth_token_used(token):
 def user_data(token):
     return sql.select('accounts', f"auth = '{token}'")
 
-ct = 0
-
 class SQL:
     def __init__(self):
         self.conn = psycopg2.connect(
@@ -182,9 +176,6 @@ class SQL:
             user=os.environ['DB_USER'],
             password=os.environ['DB_PASSWORD'])
         self.cur = self.conn.cursor()
-        self.tables = {} # tablename : {val: type, val: type}
-        global ct
-        ct += 1
         #self.dropTable('songs')
         #self.createTable('songs', {'id': 'SERIAL', 'name': 'TEXT NOT NULL'})
         #self.dropTable('accounts')
@@ -198,22 +189,7 @@ class SQL:
         """)
         self.conn.commit()
 
-    def recreateTable(self, name):
-        if not self.tables.get(name):
-            return False
-        text = []
-        for n, val in self.tables[name]:
-            text.append(f'{n} {val}')
-        text = ',\n'.join(text)
-        self.cur.execute(f"""
-        CREATE TABLE IF NOT EXISTS {name} (
-            {text});
-        """)
-        self.conn.commit()
-        return True
-
     def createTable(self, name, columns: dict):
-        self.tables[name] = columns
         text = []
         for n, val in columns.items():
             text.append(f'{n} {val}')
@@ -249,10 +225,17 @@ class SQL:
         retList = []
         for s in self.cur.fetchall():
             row = {}
-            for (colname, cast), value in zip(self.tables.get(table).items(), s):
+            for (colname, cast), value in zip([desc[0] for desc in self.cur.description], s):
                 row.update({colname: self.typeCast(value, cast)[0]})
             retList.append(row)
         return retList
+    
+    def selectColumns(self, table):
+        self.cur.execute(f"""
+            SELECT * from {table}
+        """)
+        self.cur.fetchall()
+        return [desc[0] for desc in self.cur.description]
 
     def typeCast(self, val, typeString):
         # returns a value, typecast via typeString, and also the type

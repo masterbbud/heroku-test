@@ -10,32 +10,13 @@ import requests
 response = requests.get('https://masterbbud-python-test.herokuapp.com/create-accounts')
 
 print(response.text)
-response = requests.get('https://masterbbud-python-test.herokuapp.com/sql-tables')
-
-print(response.text)
 token = requests.post('https://masterbbud-python-test.herokuapp.com/signup', json={'username': 'betteruser', 'password': 'lucy'}).text
 
 print(token)
-response = requests.get('https://masterbbud-python-test.herokuapp.com/sql-tables')
-
-print(response.text)
 response = requests.get('https://masterbbud-python-test.herokuapp.com/get-accounts')
-
-print(response.text)
-response = requests.get('https://masterbbud-python-test.herokuapp.com/sql-tables')
 
 print(response.text)
 
 response = requests.post('https://masterbbud-python-test.herokuapp.com/get-account-data', json={'token': token})
 
-print(response.text)
-
-#response = requests.get('https://masterbbud-python-test.herokuapp.com/test-login')
-#print(response.text)
-
-quit()
-response = requests.get('https://masterbbud-python-test.herokuapp.com/signup?username=sky&password=diamonds')
-print(response.text)
-
-response = requests.get('https://masterbbud-python-test.herokuapp.com/get-accounts')
 print(response.text)
