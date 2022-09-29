@@ -6,6 +6,10 @@ import requests
 #   If successful, the AUTH token for the specified account (either existing or new)
 #   ERROR: SomeMessage if the creation/login failed
 
+response = requests.get('https://masterbbud-python-test.herokuapp.com/test-module')
+
+print(response.text)
+quit()
 
 response = requests.get('https://masterbbud-python-test.herokuapp.com/create-accounts')
 

@@ -118,7 +118,7 @@ def test_columns():
     return [str(i) for i in sql.selectColumns('accounts')]
 
 @app.route("/test-module")
-def test_columns():
+def test_module():
     return testvar
 
 def get_auth_token():
