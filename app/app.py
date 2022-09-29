@@ -235,7 +235,7 @@ class SQL:
             SELECT * from {table}
         """)
         self.cur.fetchall()
-        return [desc[0] for desc in self.cur.description]
+        return [desc for desc in self.cur.description]
 
     def typeCast(self, val, typeString):
         # returns a value, typecast via typeString, and also the type
