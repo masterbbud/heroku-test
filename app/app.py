@@ -209,7 +209,7 @@ class SQL:
         """)
         self.conn.commit()
 
-    def select(self, table, where):
+    def select(self, table, where=None):
         if where:
             self.cur.execute(f"""
                 SELECT * from {table} where {where}
