@@ -1,9 +1,12 @@
+from types import NoneType
 from flask import Flask, jsonify, request
 
 from boto.s3.connection import S3Connection
 import os
 
 import psycopg2
+
+from datetime import datetime
  
 app = Flask(__name__)
  
@@ -46,12 +49,12 @@ def sql_test():
 @app.route("/add-song")
 def add_song():
     if request.args.get('name', None):
-        sql.addSong(request.args.get('name'))
+        sql.insert('songs', {'name': request.args.get('name')})
     return ''
 
 @app.route("/get-songs")
 def get_songs():
-    return sql.getSongs()
+    return sql.select('songs')
 
 @app.route("/drop-songs")
 def drop_songs():
@@ -66,45 +69,79 @@ class SQL:
             user=os.environ['DB_USER'],
             password=os.environ['DB_PASSWORD'])
         self.cur = self.conn.cursor()
-        self.cur.execute("""
-        CREATE TABLE IF NOT EXISTS songs (
-            id SERIAL PRIMARY KEY,
-            name TEXT NOT NULL
-        );
-        """)
+        self.tables = {} # tablename : {val: type, val: type}
+        self.dropTable('songs')
+        self.createTable('songs', {'id': 'SERIAL PRIMARY KEY', 'name': 'TEXT NOT NULL'})
         
-    def addSong(self, name):
+    def dropTable(self, name):
         self.cur.execute(f"""
-            INSERT into songs (name)
-            VALUES (
-                '{name}'
-            )
+            DROP TABLE IF EXISTS {name}
         """)
         self.conn.commit()
-    
-    def getSongs(self):
+
+    def recreateTable(self, name):
+        if not self.tables.get(name):
+            return False
+        text = ''
+        for n, val in self.tables[name]:
+            text += f'{n} {val}\n'
         self.cur.execute(f"""
-            SELECT * from songs
+        CREATE TABLE IF NOT EXISTS {name} (
+            {text});
         """)
+        return True
+
+    def createTable(self, name, columns: dict):
+        text = ''
+        for n, val in columns.items():
+            text += f'{n} {val}\n'
+        self.cur.execute(f"""
+        CREATE TABLE IF NOT EXISTS {name} (
+            {text});
+        """)
+        self.tables.update({name: columns})
+    
+    def insert(self, table, columns: dict):
+        # columns should be columnName: value
+        colsList = list(columns)
+        valsList = [f"'{i}',\n" if isinstance(i, str) else f"{i},\n" for i in columns.values()]
+        self.cur.execute(f"""
+        INSERT into {table} ({colsList})
+        VALUES (
+            {valsList}
+        )
+        """)
+        self.conn.commit()
+
+    def select(self, table, where):
+        if where:
+            self.cur.execute(f"""
+                SELECT * from {table} where {where}
+            """)
+        else:
+            self.cur.execute(f"""
+                SELECT * from {table}
+            """)
         retList = []
         for s in self.cur.fetchall():
-            retList.append({
-                'id': s[0],
-                'name': s[1]
-            })
+            row = {}
+            for (colname, cast), value in zip(self.tables[table].items(), s[:-1]):
+                row.update({colname: self.typeCast(value, cast)[0]})
+            retList.append(row)
         return retList
 
-    def dropTable(self):
-        self.cur.execute(f"""
-            DROP TABLE IF EXISTS songs
-        """)
-        self.cur.execute("""
-        CREATE TABLE IF NOT EXISTS songs (
-            id SERIAL PRIMARY KEY,
-            name TEXT NOT NULL
-        );
-        """)
-        self.conn.commit()
+    def typeCast(self, val, typeString):
+        # returns a value, typecast via typeString, and also the type
+        if 'TEXT' in typeString:
+            return str(val), str
+        elif 'INTEGER' in typeString or 'SERIAL' in typeString:
+            return int(val), int
+        elif 'BOOLEAN' in typeString:
+            return bool(val), bool
+        elif 'TIMESTAMP' in typeString:
+            return datetime(val), datetime
+        return val, NoneType
+
 
 sql = SQL()
 
