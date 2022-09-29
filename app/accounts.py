@@ -1,11 +1,12 @@
 from flask import request
 from flask_bcrypt import Bcrypt
 
-from app.app import app, sql
-
 import secrets
 
-bcrypt = Bcrypt(app)
+app = None
+sql = None
+
+bcrypt = None # Bcrypt(app)
 
 @app.route('/login', methods=['POST'])
 def login():

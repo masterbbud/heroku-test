@@ -4,7 +4,7 @@ from types import NoneType
 
 import psycopg2
 
-from app.app import tables
+tables = None
 
 class SQL:
     def __init__(self):

@@ -4,8 +4,6 @@ import secrets
 from flask import Flask, request
 from flask_bcrypt import Bcrypt
 
-from app.sql import SQL
-
 app = Flask(__name__)
 
 app.secret_key = os.environ['SECRET_KEY']
@@ -14,7 +12,16 @@ tables = {
     'accounts': {'id': 'SERIAL', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL', 'auth': 'TEXT NOT NULL'}
 }
 
-sql = SQL()
+import app.sql
+
+sql = app.sql.SQL()
+app.sql.tables = tables
+
+import app.accounts
+
+app.accounts.app = app
+app.accounts.sql = sql
+app.accounts.bcrypt = Bcrypt(app)
 
 @app.route("/add-song")
 def add_song():
