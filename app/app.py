@@ -79,7 +79,7 @@ def signup():
 def account_data():
     return accounts.account_data()
 
-@app.route("/reset-cursor", requests=['POST'])
+@app.route("/reset-cursor", methods=['POST'])
 def reset_cursor():
     sql.resetCursor()
     return 'Reset Cursor'
