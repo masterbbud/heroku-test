@@ -43,10 +43,9 @@ def sql_test():
     rows = cur.fetchall()
     return rows + sql.testvar
 
-@app.route("/add-song", methods=['POST'])
+@app.route("/add-song")
 def add_song():
-    #args = {x:y for x,y in request.args}
-    args = request.json
+    args = {x:y for x,y in request.args}
     sql.addSong(args['name'])
     return ''
 
