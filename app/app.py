@@ -41,11 +41,11 @@ def sql_test():
     SELECT * from newtable
     """)
     rows = cur.fetchall()
-    return rows + sql.testvar
+    return rows
 
 @app.route("/add-song")
 def add_song():
-    args = {x:y for x,y in request.args}
+    args = {x:y for x,y in request.args[:2]}
     sql.addSong(args['name'])
     return ''
 
