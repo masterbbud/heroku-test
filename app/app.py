@@ -146,7 +146,7 @@ def remove_accounts():
 
 @app.route("/sql-tables")
 def sql_tables():
-    return sql.tables
+    return sql.tables + ct
 
 @app.route("/get-account-data", methods=['POST'])
 def account_data():
@@ -159,6 +159,10 @@ def account_data():
     else:
         return user_data(token)
 
+@app.route("/get-count")
+def get_count():
+    return ct
+
 def get_auth_token():
     return secrets.token_urlsafe(20)
 
@@ -167,6 +171,8 @@ def auth_token_used(token):
     
 def user_data(token):
     return sql.select('accounts', f"auth = '{token}'")
+
+ct = 0
 
 class SQL:
     def __init__(self):
@@ -177,6 +183,8 @@ class SQL:
             password=os.environ['DB_PASSWORD'])
         self.cur = self.conn.cursor()
         self.tables = {} # tablename : {val: type, val: type}
+        global ct
+        ct += 1
         #self.dropTable('songs')
         #self.createTable('songs', {'id': 'SERIAL', 'name': 'TEXT NOT NULL'})
         #self.dropTable('accounts')
