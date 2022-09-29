@@ -13,7 +13,7 @@ print(response.text)
 response = requests.get('https://masterbbud-python-test.herokuapp.com/sql-tables')
 
 print(response.text)
-response = requests.post('https://masterbbud-python-test.herokuapp.com/signup', json={'username': 'newuser', 'password': 'lucy'})
+response = requests.post('https://masterbbud-python-test.herokuapp.com/signup', json={'username': 'otheruser', 'password': 'lucy'})
 
 print(response.text)
 response = requests.get('https://masterbbud-python-test.herokuapp.com/sql-tables')
