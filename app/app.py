@@ -34,6 +34,6 @@ def sql_test():
     conn = psycopg2.connect(
         host=os.environ['DB_HOST'],
         database=os.environ['DB_DATABASE'],
-        user=os.environ['DB_USERNAME'],
+        user=os.environ['DB_USER'],
         password=os.environ['DB_PASSWORD'])
     return print(conn)
