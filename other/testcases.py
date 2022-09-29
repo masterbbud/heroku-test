@@ -1,16 +1,16 @@
 import requests
 
-#response = requests.get('https://masterbbud-python-test.herokuapp.com/drop-songs')
-#response = requests.get('https://masterbbud-python-test.herokuapp.com/add-song?name=lucyintheskywithdiamonds')
-#response = requests.get('https://masterbbud-python-test.herokuapp.com/add-song?name=lucy')
-#response = requests.get('https://masterbbud-python-test.herokuapp.com/get-songs')
-
+# NOTES:
+# Anything that includes personal data should be a POST call.
+# Calling login or signup returns either:
+#   If successful, the AUTH token for the specified account (either existing or new)
+#   ERROR: SomeMessage if the creation/login failed
 
 
 response = requests.get('https://masterbbud-python-test.herokuapp.com/create-accounts')
 
 print(response.text)
-token = requests.post('https://masterbbud-python-test.herokuapp.com/signup', json={'username': 'betteruser', 'password': 'lucy'}).text
+token = requests.post('https://masterbbud-python-test.herokuapp.com/login', json={'username': 'anotheruser', 'password': 'lucy'}).text
 
 print(token)
 response = requests.get('https://masterbbud-python-test.herokuapp.com/get-accounts')

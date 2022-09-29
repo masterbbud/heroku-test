@@ -1,19 +1,13 @@
-from types import NoneType
-from flask import Flask, jsonify, request
-
-from boto.s3.connection import S3Connection
 import os
+import secrets
+from datetime import datetime
+from types import NoneType
 
 import psycopg2
-
-from datetime import datetime
-
+from flask import Flask, jsonify, request
 from flask_bcrypt import Bcrypt
 
-import secrets
-
-# Something that will reset the cursor if you need to reconnect to the database
-# tables just disappear sometimes. wtf
+from app.sql import testvar
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -70,42 +64,6 @@ def signup():
     sql.insert('accounts', {'username': username, 'password': pw, 'auth': auth})
     return auth
 
-@app.route("/")
-def home_view():
-    return "<h1>Welcome to Geeks for Geeks</h1>"
-
-@app.route("/get-test")
-def get_test():
-    retDict = {
-        'users': [
-            {
-                'id': 1,
-                'name': 'brandon'
-            },
-            {
-                'id': 6,
-                'name': 'leah'
-            }
-        ]
-    }
-    return jsonify(retDict)
-
-@app.route("/sql-test")
-def sql_test():
-    conn = psycopg2.connect(
-        host=os.environ['DB_HOST'],
-        database=os.environ['DB_DATABASE'],
-        user=os.environ['DB_USER'],
-        password=os.environ['DB_PASSWORD'])
-    cur = conn.cursor()
-
-    sql.addSong('testsong')
-    cur.execute("""
-    SELECT * from newtable
-    """)
-    rows = cur.fetchall()
-    return rows
-
 @app.route("/add-song")
 def add_song():
     if request.args.get('name', None):
@@ -159,6 +117,10 @@ def account_data():
 def test_columns():
     return [str(i) for i in sql.selectColumns('accounts')]
 
+@app.route("/test-module")
+def test_columns():
+    return testvar
+
 def get_auth_token():
     return secrets.token_urlsafe(20)
 
@@ -180,10 +142,6 @@ class SQL:
             user=os.environ['DB_USER'],
             password=os.environ['DB_PASSWORD'])
         self.cur = self.conn.cursor()
-        #self.dropTable('songs')
-        #self.createTable('songs', {'id': 'SERIAL', 'name': 'TEXT NOT NULL'})
-        #self.dropTable('accounts')
-        #self.createTable('accounts', {'id': 'SERIAL', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL'})
         
     def dropTable(self, name):
         self.cur.execute(f"""
