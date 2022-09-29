@@ -74,7 +74,6 @@ class SQL:
         """)
         
     def addSong(self, name):
-        print(name)
         self.cur.execute(f"""
             INSERT into songs (name)
             VALUES (
@@ -99,6 +98,7 @@ class SQL:
         self.cur.execute(f"""
             DROP TABLE IF EXISTS songs
         """)
+        self.conn.commit()
 
 sql = SQL()
 
