@@ -1,4 +1,6 @@
 from flask import Flask, jsonify
+
+import sql
  
 app = Flask(__name__)
  
@@ -21,3 +23,8 @@ def get_test():
         ]
     }
     return jsonify(retDict)
+
+@app.route("/sql-test")
+def sql_test():
+    return sql.s3
+    
