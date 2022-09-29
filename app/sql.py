@@ -83,3 +83,4 @@ class SQL:
         elif 'TIMESTAMP' in typeString:
             return datetime(val), datetime
         return val, NoneType
+        

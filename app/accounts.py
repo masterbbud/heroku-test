@@ -70,3 +70,4 @@ def get_auth_token():
 
 def auth_token_used(token):
         return True if sql.select('accounts', f"auth = '{token}'") else False
+        
