@@ -169,7 +169,9 @@ class SQL:
         
     def dropTable(self, name):
         self.cur.execute(f"""
-            DROP TABLE IF EXISTS {name} CASCADE
+            ALTER TABLE {name}
+                DROP CONSTRAINT {name}_id_seq
+            DROP TABLE IF EXISTS {name}
         """)
         self.conn.commit()
 
@@ -184,6 +186,7 @@ class SQL:
         CREATE TABLE IF NOT EXISTS {name} (
             {text});
         """)
+        self.conn.commit()
         return True
 
     def createTable(self, name, columns: dict):
@@ -196,6 +199,7 @@ class SQL:
             {text});
         """)
         self.tables.update({name: columns})
+        self.conn.commit()
     
     def insert(self, table, columns: dict):
         # columns should be columnName: value
