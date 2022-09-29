@@ -5,7 +5,7 @@ import requests
 #response = requests.get('https://masterbbud-python-test.herokuapp.com/add-song?name=lucy')
 #response = requests.get('https://masterbbud-python-test.herokuapp.com/get-songs')
 
-response = requests.get('https://masterbbud-python-test.herokuapp.com/signup?username=lucy&password=diamonds')
+response = requests.get('https://masterbbud-python-test.herokuapp.com/signup?username=sky&password=diamonds')
 print(response.text)
 
 response = requests.get('https://masterbbud-python-test.herokuapp.com/get-accounts')

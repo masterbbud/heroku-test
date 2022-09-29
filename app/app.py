@@ -164,6 +164,7 @@ class SQL:
         self.tables = {} # tablename : {val: type, val: type}
         self.dropTable('songs')
         self.createTable('songs', {'id': 'SERIAL PRIMARY KEY', 'name': 'TEXT NOT NULL'})
+        self.dropTable('accounts')
         self.createTable('accounts', {'id': 'SERIAL PRIMARY KEY', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL'})
         
     def dropTable(self, name):
@@ -221,7 +222,7 @@ class SQL:
         retList = []
         for s in self.cur.fetchall():
             row = {}
-            for (colname, cast), value in zip(self.tables[table].items(), s[:-1]):
+            for (colname, cast), value in zip(self.tables[table].items(), s):
                 row.update({colname: self.typeCast(value, cast)[0]})
             retList.append(row)
         return retList
