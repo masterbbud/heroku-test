@@ -10,7 +10,7 @@ import requests
 response = requests.get('https://masterbbud-python-test.herokuapp.com/create-accounts')
 
 print(response.text)
-response = requests.get('https://masterbbud-python-test.herokuapp.com/signup?username=newuser&password=diamonds')
+response = requests.get('https://masterbbud-python-test.herokuapp.com/login?username=newuser&password=diamonds')
 
 print(response.text)
 

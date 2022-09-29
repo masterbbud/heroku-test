@@ -30,7 +30,7 @@ def load_user(id):
 def login():
     user = User.find(request.args.get('username'), request.args.get('password'))
     if user:
-        login_user(user)
+        login_user(user, remember=True)
         return 'Logged in!'
     else:
         return 'Incorrect Login Credentials'
@@ -40,7 +40,7 @@ def login():
 def signup():
     user = User.create(request.args.get('username'), request.args.get('password'))
     if user:
-        login_user(user)
+        login_user(user, remember=True)
         return 'Signed up and Logged in!'
     else:
         return 'Account already exists with that username'
