@@ -12,6 +12,8 @@ from flask_login import LoginManager, login_user, current_user
 
 from flask_bcrypt import Bcrypt
 
+import secrets
+
 # Something that will reset the cursor if you need to reconnect to the database
 
 app = Flask(__name__)
@@ -36,14 +38,38 @@ def login():
         return 'Incorrect Login Credentials'
     
 
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
+@app.route('/signupAAA', methods=['GET', 'POST'])
+def signupAAA():
     user = User.create(request.args.get('username'), request.args.get('password'))
     if user:
         login_user(user, remember=True)
         return 'Signed up and Logged in!'
     else:
         return 'Account already exists with that username'
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    args = request.json
+    username = args.get('username')
+    if not username:
+        return 'Failed to create account: no username provided'
+    password = args.get('password')
+    if not password:
+        return 'Failed to create account: no password provided'
+
+    acc = sql.select('accounts', f"username = '{username}'")
+    if acc:
+        return 'Failed to create account: account with that username already exists'
+    # then, add username and hashed password to sql
+
+    pw = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    auth = get_auth_token()
+    while User.auth_token_used(auth):
+        auth = get_auth_token()
+    
+    sql.insert('accounts', {'username': username, 'password': pw, 'auth': auth})
+    return auth
 
 @app.route("/")
 def home_view():
@@ -126,6 +152,8 @@ def test_login():
     else:
         return 'not authenticated' + str(current_user)
 
+def get_auth_token():
+    return secrets.token_urlsafe(20)
 
 class User:
 
@@ -179,8 +207,17 @@ class User:
         # then, add username and hashed password to sql
 
         pw = bcrypt.generate_password_hash(password).decode('utf-8')
-        sql.insert('accounts', {'username': username, 'password': pw})
+
+        auth = get_auth_token()
+        while User.auth_token_used(auth):
+            auth = get_auth_token()
+        
+        sql.insert('accounts', {'username': username, 'password': pw, 'auth': auth})
         return User.find(username, password)
+    
+    @staticmethod
+    def auth_token_used(token):
+        return True if sql.select('accounts', f"auth = '{token}'") else False
 
 class SQL:
     def __init__(self):
@@ -219,6 +256,7 @@ class SQL:
         return True
 
     def createTable(self, name, columns: dict):
+        self.tables[name] = columns
         text = []
         for n, val in columns.items():
             text.append(f'{n} {val}')
@@ -227,7 +265,6 @@ class SQL:
         CREATE TABLE IF NOT EXISTS {name} (
             {text});
         """)
-        self.tables.update({name: columns})
         self.conn.commit()
     
     def insert(self, table, columns: dict):
