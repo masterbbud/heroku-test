@@ -152,6 +152,10 @@ def test_login():
     else:
         return 'not authenticated' + str(current_user)
 
+@app.route("/sql-tables")
+def sql_tables():
+    return sql.tables
+
 def get_auth_token():
     return secrets.token_urlsafe(20)
 
