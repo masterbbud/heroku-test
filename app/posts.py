@@ -27,13 +27,14 @@ def createPost(user, songid, caption):
         'likes': 0
     }
     sql.insert('posts', sendDict)
+    return 'Created Post'
 
 def get_posts_request():
     args = request.json
     auth = args.get('auth')
     if not auth:
         return 'ERROR: Request needs auth'
-    getPosts(sql.select('accounts', f"auth = '{auth}'")['id'])
+    return getPosts(sql.select('accounts', f"auth = '{auth}'")['id'])
 
 def getPosts(id):
     allPosts = []

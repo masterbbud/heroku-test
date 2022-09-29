@@ -56,14 +56,16 @@ def signup():
     return auth
 
 def follow_request():
+    # needs auth instead of user
     args = request.json
-    user = args.get('user')
-    if not user:
-        return 'ERROR: Request needs user'
+    auth = args.get('auth')
+    if not auth:
+        return 'ERROR: Request needs auth'
+        # Check auth
     following = args.get('following')
     if not following:
         return 'ERROR: Request needs following'
-    follow(user, following)
+    follow(sql.select('accounts', f"auth = '{auth}'")['id'], following)
 
 def follow(user, following):
     acc = sql.select('friends', f"user = {user} and following = {following}")
