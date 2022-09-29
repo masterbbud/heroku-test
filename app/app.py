@@ -98,6 +98,12 @@ class SQL:
         self.cur.execute(f"""
             DROP TABLE IF EXISTS songs
         """)
+        self.cur.execute("""
+        CREATE TABLE IF NOT EXISTS songs (
+            id SERIAL PRIMARY KEY,
+            name TEXT NOT NULL
+        );
+        """)
         self.conn.commit()
 
 sql = SQL()
