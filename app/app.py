@@ -12,16 +12,15 @@ tables = {
     'accounts': {'id': 'SERIAL', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL', 'auth': 'TEXT NOT NULL'}
 }
 
-import app.sql
+import app.sql as sqlClass
 
-sql = app.sql.SQL()
-app.sql.tables = tables
+sql = sqlClass.SQL()
+sqlClass.tables = tables
 
-import app.accounts
+import app.accounts as accounts
 
-app.accounts.app = app
-app.accounts.sql = sql
-app.accounts.bcrypt = Bcrypt(app)
+accounts.sql = sql
+accounts.bcrypt = Bcrypt(app)
 
 @app.route("/add-song")
 def add_song():
@@ -65,4 +64,14 @@ def remove_accounts():
 def test_columns():
     return [str(i) for i in sql.selectColumns('accounts')]
 
+@app.route("/login", methods=['POST'])
+def login():
+    return accounts.login()
 
+@app.route("/signup", methods=['POST'])
+def signup():
+    return accounts.signup()
+
+@app.route("/account-data", methods=['POST'])
+def account_data():
+    return accounts.account_data()

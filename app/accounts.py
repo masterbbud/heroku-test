@@ -3,12 +3,10 @@ from flask_bcrypt import Bcrypt
 
 import secrets
 
-app = None
 sql = None
 
 bcrypt = None # Bcrypt(app)
 
-@app.route('/login', methods=['POST'])
 def login():
     """
     POST with a username and password, returns the AUTH key for that account or a warning based on the failure
@@ -31,7 +29,6 @@ def login():
     else:
         return 'ERROR: Incorrect Password'
 
-@app.route('/signup', methods=['POST'])
 def signup():
     """
     POST with a username and password, creates an account if able and returns the AUTH key for that account or
@@ -58,7 +55,6 @@ def signup():
     sql.insert('accounts', {'username': username, 'password': pw, 'auth': auth})
     return auth
 
-@app.route("/get-account-data", methods=['POST'])
 def account_data():
     args = request.json
     token = args.get('token')
