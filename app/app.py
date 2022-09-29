@@ -169,7 +169,7 @@ class SQL:
         
     def dropTable(self, name):
         self.cur.execute(f"""
-            DROP TABLE IF EXISTS {name}
+            DROP TABLE IF EXISTS {name} CASCADE
         """)
         self.conn.commit()
 
