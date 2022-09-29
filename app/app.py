@@ -121,7 +121,7 @@ def remove_accounts():
 
 @app.route("/test-login")
 def test_login():
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         return 'User is authenticated'
     else:
         return 'User is NOT authenticated'
