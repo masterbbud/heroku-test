@@ -66,7 +66,7 @@ class SQL:
         self.cur = self.conn.cursor()
         self.cur.execute("""
         CREATE TABLE IF NOT EXISTS songs (
-            id INTEGER AUTO INCREMENT,
+            id SERIAL,
             name TEXT
         );
         """)
