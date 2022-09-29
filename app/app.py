@@ -3,6 +3,8 @@ from flask import Flask, jsonify
 from boto.s3.connection import S3Connection
 import os
 
+import psycopg2
+
 #import sql
  
 app = Flask(__name__)
@@ -29,4 +31,9 @@ def get_test():
 
 @app.route("/sql-test")
 def sql_test():
-    return S3Connection(os.environ['DATABASE_URL'])
+    conn = psycopg2.connect(
+        host="localhost",
+        database="flask_db",
+        user=os.environ['DB_USERNAME'],
+        password=os.environ['DB_PASSWORD'])
+    return print(conn)
