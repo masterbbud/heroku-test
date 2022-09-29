@@ -1,11 +1,9 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 from boto.s3.connection import S3Connection
 import os
 
 import psycopg2
-
-import sql
  
 app = Flask(__name__)
  
@@ -38,25 +36,62 @@ def sql_test():
         password=os.environ['DB_PASSWORD'])
     cur = conn.cursor()
 
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS newtable (
-    column1 INTEGER
-    );
-    """)
-    cur.execute("""
-    INSERT into newtable(column1)
-    VALUES (
-        5
-    );
-    """)
-    cur.execute("""
-    INSERT into newtable(column1)
-    VALUES (
-        5
-    );
-    """)
+    sql.addSong('testsong')
     cur.execute("""
     SELECT * from newtable
     """)
     rows = cur.fetchall()
     return rows + sql.testvar
+
+@app.route("/add-song")
+def add_song():
+    args = {x:y for x,y in request.args}
+    sql.addSong(args['name'])
+    return ''
+
+@app.route("/get-songs")
+def get_songs():
+    return sql.getSongs()
+
+
+
+
+class SQL:
+    def __init__(self):
+        self.conn = psycopg2.connect(
+            host=os.environ['DB_HOST'],
+            database=os.environ['DB_DATABASE'],
+            user=os.environ['DB_USER'],
+            password=os.environ['DB_PASSWORD'])
+        self.cur = self.conn.cursor()
+        self.cur.execute("""
+        CREATE TABLE IF NOT EXISTS songs (
+            id INTEGER AUTO INCREMENT,
+            name TEXT
+        );
+        """)
+        
+    def addSong(self, name):
+        self.cur.execute(f"""
+            INSERT into songs (name)
+            VALUES (
+                {name}
+            )
+        """)
+        self.conn.commit()
+    
+    def getSongs(self):
+        self.cur.execute(f"""
+            SELECT * from songs
+        """)
+        retList = []
+        for s in self.cur.fetchall():
+            retList.append({
+                'id': s[0],
+                'name': s[1]
+            })
+        return retList
+
+sql = SQL()
+
+
