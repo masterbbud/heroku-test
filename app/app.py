@@ -55,7 +55,7 @@ def get_songs():
 
 @app.route("/drop-songs")
 def drop_songs():
-    return sql.dropTable()
+    return ''
 
 
 class SQL:
