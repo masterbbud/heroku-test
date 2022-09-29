@@ -175,9 +175,10 @@ class SQL:
     def recreateTable(self, name):
         if not self.tables.get(name):
             return False
-        text = ''
+        text = []
         for n, val in self.tables[name]:
-            text += f'{n} {val}\n'
+            text.append(f'{n} {val}')
+        text = ',\n'.join(text)
         self.cur.execute(f"""
         CREATE TABLE IF NOT EXISTS {name} (
             {text});
@@ -185,9 +186,10 @@ class SQL:
         return True
 
     def createTable(self, name, columns: dict):
-        text = ''
+        text = []
         for n, val in columns.items():
-            text += f'{n} {val},\n'
+            text.append(f'{n} {val}')
+        text = ',\n'.join(text)
         self.cur.execute(f"""
         CREATE TABLE IF NOT EXISTS {name} (
             {text});
@@ -197,11 +199,12 @@ class SQL:
     def insert(self, table, columns: dict):
         # columns should be columnName: value
         colsList = list(columns)
-        valsList = [f"'{i}',\n" if isinstance(i, str) else f"{i},\n" for i in columns.values()]
+        valsList = [f"'{i}'" if isinstance(i, str) else f"{i}" for i in columns.values()]
+        valsText = ',\n'.join(valsList)
         self.cur.execute(f"""
         INSERT into {table} ({colsList})
         VALUES (
-            {valsList}
+            {valsText}
         )
         """)
         self.conn.commit()
