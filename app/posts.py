@@ -2,6 +2,8 @@ from datetime import datetime
 
 from flask import request
 
+from accounts import auth_token_used
+
 sql = None
 
 def create_post_request():
@@ -9,13 +11,15 @@ def create_post_request():
     auth = args.get('auth')
     if not auth:
         return 'ERROR: Request needs auth'
+    if not auth_token_used(auth):
+        return 'ERROR: Invalid token'
     songid = args.get('songid')
     if not songid:
         return 'ERROR: Request needs songid'
     caption = args.get('caption')
     if not caption:
         return 'ERROR: Request needs caption'
-    user = sql.select('accounts', f"auth = '{auth}'")['id']
+    user = sql.select('accounts', f"auth = '{auth}'")[0]['id']
     createPost(user, songid, caption)
 
 def createPost(user, songid, caption):
@@ -34,7 +38,9 @@ def get_posts_request():
     auth = args.get('auth')
     if not auth:
         return 'ERROR: Request needs auth'
-    return getPosts(sql.select('accounts', f"auth = '{auth}'")['id'])
+    if not auth_token_used(auth):
+        return 'ERROR: Invalid token'
+    return getPosts(sql.select('accounts', f"auth = '{auth}'")[0]['id'])
 
 def getPosts(id):
     allPosts = []

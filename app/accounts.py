@@ -61,11 +61,12 @@ def follow_request():
     auth = args.get('auth')
     if not auth:
         return 'ERROR: Request needs auth'
-        # Check auth
+    if not auth_token_used(auth):
+        return 'ERROR: Invalid token'
     following = args.get('following')
     if not following:
         return 'ERROR: Request needs following'
-    follow(sql.select('accounts', f"auth = '{auth}'")['id'], following)
+    follow(sql.select('accounts', f"auth = '{auth}'")[0]['id'], following)
 
 def follow(user, following):
     acc = sql.select('friends', f"user = {user} and following = {following}")
