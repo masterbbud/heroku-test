@@ -91,7 +91,7 @@ def get_songs():
     return sql.select('songs')
 
 @app.route("/get-accounts")
-def get_songs():
+def get_accounts():
     return sql.select('accounts')
 
 @app.route("/drop-songs")
