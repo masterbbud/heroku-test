@@ -198,7 +198,7 @@ class SQL:
     
     def insert(self, table, columns: dict):
         # columns should be columnName: value
-        colsList = list(columns)
+        colsList = ', '.join(list(columns))
         valsList = [f"'{i}'" if isinstance(i, str) else f"{i}" for i in columns.values()]
         valsText = ',\n'.join(valsList)
         self.cur.execute(f"""
