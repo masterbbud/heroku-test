@@ -17,8 +17,6 @@ class SQL:
         
     def dropTable(self, name):
         self.cur.execute(f"""
-            ALTER TABLE {name}
-                DROP CONSTRAINT {name}_id_seq
             DROP TABLE IF EXISTS {name}
         """)
         self.conn.commit()
@@ -83,4 +81,3 @@ class SQL:
         elif 'TIMESTAMP' in typeString:
             return datetime(val), datetime
         return val, NoneType
-        

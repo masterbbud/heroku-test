@@ -9,7 +9,8 @@ app = Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
 
 tables = {
-    'accounts': {'id': 'SERIAL', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL', 'auth': 'TEXT NOT NULL'}
+    'accounts': {'id': 'SERIAL', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL', 'auth': 'TEXT NOT NULL'},
+    'songs': {'id': 'SERIAL', 'title': 'TEXT NOT NULL', 'artist': 'TEXT', 'image': 'TEXT', 'spotify': 'TEXT', 'itunes': 'TEXT', 'youtube': 'TEXT', 'tidal': 'TEXT', 'amazonMusic': 'TEXT', 'soundcloud': 'TEXT', 'youtubeMusic': 'TEXT'}
 }
 
 import app.sql as sqlClass
@@ -22,11 +23,13 @@ import app.accounts as accounts
 accounts.sql = sql
 accounts.bcrypt = Bcrypt(app)
 
-@app.route("/add-song")
+import app.songs as songs
+
+songs.sql = sql
+
+@app.route("/add-song", methods=['POST'])
 def add_song():
-    if request.args.get('name', None):
-        sql.insert('songs', {'name': request.args.get('name')})
-    return ''
+    return songs.add_song_request()
 
 @app.route("/get-songs")
 def get_songs():
