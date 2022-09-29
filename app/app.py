@@ -157,7 +157,7 @@ def account_data():
 
 @app.route("/test-columns")
 def test_columns():
-    return sql.selectColumns('accounts')
+    return [str(i) for i in sql.selectColumns('accounts')]
 
 def get_auth_token():
     return secrets.token_urlsafe(20)
