@@ -13,7 +13,7 @@ print(response.text)
 response = requests.get('https://masterbbud-python-test.herokuapp.com/create-accounts')
 
 print(response.text)
-token = requests.post('https://masterbbud-python-test.herokuapp.com/signup', json={'username': 'anotheruser', 'password': 'lucy'}).text
+token = requests.post('https://masterbbud-python-test.herokuapp.com/signup', json={'username': 'yetanother', 'password': 'lucy'}).text
 
 print(token)
 response = requests.get('https://masterbbud-python-test.herokuapp.com/get-accounts')

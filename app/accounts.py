@@ -44,7 +44,7 @@ def signup():
 
     acc = sql.select('accounts', f"username = '{username}'")
     if acc:
-        return 'ERROR: Username already exists'
+        return acc
 
     pw = bcrypt.generate_password_hash(password).decode('utf-8')
 
@@ -70,4 +70,3 @@ def get_auth_token():
 
 def auth_token_used(token):
         return True if sql.select('accounts', f"auth = '{token}'") else False
-        
