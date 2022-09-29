@@ -53,7 +53,9 @@ def add_song():
 def get_songs():
     return sql.getSongs()
 
-
+@app.route("/drop-songs")
+def drop_songs():
+    return sql.dropTable()
 
 
 class SQL:
@@ -66,16 +68,17 @@ class SQL:
         self.cur = self.conn.cursor()
         self.cur.execute("""
         CREATE TABLE IF NOT EXISTS songs (
-            id SERIAL,
-            name TEXT
+            id SERIAL PRIMARY KEY,
+            name TEXT NOT NULL
         );
         """)
         
     def addSong(self, name):
+        print(name)
         self.cur.execute(f"""
             INSERT into songs (name)
             VALUES (
-                {name}
+                '{name}'
             )
         """)
         self.conn.commit()
@@ -91,6 +94,11 @@ class SQL:
                 'name': s[1]
             })
         return retList
+
+    def dropTable(self):
+        self.cur.execute(f"""
+            DROP TABLE IF EXISTS songs
+        """)
 
 sql = SQL()
 
