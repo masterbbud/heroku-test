@@ -1,6 +1,9 @@
 from flask import Flask, jsonify
 
-import sql
+from boto.s3.connection import S3Connection
+import os
+
+#import sql
  
 app = Flask(__name__)
  
@@ -26,5 +29,4 @@ def get_test():
 
 @app.route("/sql-test")
 def sql_test():
-    return sql.s3
-    
+    return S3Connection(os.environ['DATABASE_URL'])
