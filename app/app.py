@@ -8,10 +8,11 @@ import psycopg2
 
 from datetime import datetime
 
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, current_user
 
 from flask_bcrypt import Bcrypt
 
+# Something that will reset the cursor if you need to reconnect to the database
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -118,6 +119,12 @@ def remove_accounts():
     sql.dropTable('accounts')
     return 'Removed Accounts'
 
+@app.route("/test-login")
+def test_login():
+    if current_user.is_authenticated():
+        return 'User is authenticated'
+    else:
+        return 'User is NOT authenticated'
 
 
 class User:
