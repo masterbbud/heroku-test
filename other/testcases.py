@@ -7,13 +7,7 @@ import requests
 #   ERROR: SomeMessage if the creation/login failed
 
 
-response = requests.get('https://masterbbud-python-test.herokuapp.com/remove-accounts')
-
-print(response.text)
-response = requests.get('https://masterbbud-python-test.herokuapp.com/create-accounts')
-
-print(response.text)
-token = requests.post('https://masterbbud-python-test.herokuapp.com/signup', json={'username': 'yetanother', 'password': 'lucy'}).text
+token = requests.post('https://masterbbud-python-test.herokuapp.com/login', json={'username': 'onemore', 'password': 'lucy'}).text
 
 print(token)
 response = requests.get('https://masterbbud-python-test.herokuapp.com/get-accounts')
@@ -21,5 +15,17 @@ response = requests.get('https://masterbbud-python-test.herokuapp.com/get-accoun
 print(response.text)
 
 response = requests.post('https://masterbbud-python-test.herokuapp.com/account-data', json={'token': token})
+
+print(response.text)
+
+response = requests.post('https://masterbbud-python-test.herokuapp.com/add-song', json={'token': token})
+
+print(response.text)
+
+response = requests.post('https://masterbbud-python-test.herokuapp.com/create-post', json={'token': token})
+
+print(response.text)
+
+response = requests.post('https://masterbbud-python-test.herokuapp.com/add-song', json={'token': token})
 
 print(response.text)

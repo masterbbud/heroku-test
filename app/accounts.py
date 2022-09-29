@@ -44,7 +44,7 @@ def signup():
 
     acc = sql.select('accounts', f"username = '{username}'")
     if acc:
-        return acc
+        return 'ERROR: Username already exists'
 
     pw = bcrypt.generate_password_hash(password).decode('utf-8')
 
@@ -54,6 +54,22 @@ def signup():
     
     sql.insert('accounts', {'username': username, 'password': pw, 'auth': auth})
     return auth
+
+def follow_request():
+    args = request.json
+    user = args.get('user')
+    if not user:
+        return 'ERROR: Request needs user'
+    following = args.get('following')
+    if not following:
+        return 'ERROR: Request needs following'
+    follow(user, following)
+
+def follow(user, following):
+    acc = sql.select('friends', f"user = {user} and following = {following}")
+    if acc:
+        return 'ERROR: User already following'
+    sql.insert('friends', {'user': user, 'following': following})
 
 def account_data():
     args = request.json

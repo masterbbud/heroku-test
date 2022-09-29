@@ -10,7 +10,9 @@ app.secret_key = os.environ['SECRET_KEY']
 
 tables = {
     'accounts': {'id': 'SERIAL', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL', 'auth': 'TEXT NOT NULL'},
-    'songs': {'id': 'SERIAL', 'title': 'TEXT NOT NULL', 'artist': 'TEXT', 'image': 'TEXT', 'spotify': 'TEXT', 'itunes': 'TEXT', 'youtube': 'TEXT', 'tidal': 'TEXT', 'amazonMusic': 'TEXT', 'soundcloud': 'TEXT', 'youtubeMusic': 'TEXT'}
+    'songs': {'id': 'SERIAL', 'title': 'TEXT NOT NULL', 'artist': 'TEXT', 'image': 'TEXT', 'spotify': 'TEXT', 'itunes': 'TEXT', 'youtube': 'TEXT', 'tidal': 'TEXT', 'amazonMusic': 'TEXT', 'soundcloud': 'TEXT', 'youtubeMusic': 'TEXT'},
+    'posts': {'id': 'SERIAL', 'userid': 'INTEGER', 'datetime': 'TEXT', 'songid': 'INTEGER', 'caption': 'TEXT', 'likes': 'INTEGER'},
+    'friends': {'id': 'SERIAL', 'user': 'INTEGER NOT NULL', 'following': 'INTEGER NOT NULL'}
 }
 
 import app.sql as sqlClass
@@ -27,9 +29,25 @@ import app.songs as songs
 
 songs.sql = sql
 
+import app.posts as posts
+
+posts.sql = sql
+
 @app.route("/add-song", methods=['POST'])
 def add_song():
     return songs.add_song_request()
+
+@app.route("/create-post", methods=['POST'])
+def create_post():
+    return posts.create_post_request()
+
+@app.route("/follow", methods=['POST'])
+def follow():
+    return accounts.follow_request()
+
+@app.route("/get-posts", methods=['POST'])
+def get_posts():
+    return posts.get_posts_request()
 
 @app.route("/get-songs")
 def get_songs():
@@ -39,13 +57,9 @@ def get_songs():
 def get_accounts():
     return sql.select('accounts')
 
-@app.route("/drop-songs")
-def drop_songs():
-    return ''
-
 @app.route("/create-songs")
 def create_songs():
-    sql.createTable('songs', {'id': 'SERIAL', 'name': 'TEXT NOT NULL'})
+    sql.createTable('songs')
     return 'Created Songs'
 
 @app.route("/create-accounts")
@@ -62,10 +76,6 @@ def remove_songs():
 def remove_accounts():
     sql.dropTable('accounts')
     return 'Removed Accounts'
-
-@app.route("/test-columns")
-def test_columns():
-    return [str(i) for i in sql.selectColumns('accounts')]
 
 @app.route("/login", methods=['POST'])
 def login():
