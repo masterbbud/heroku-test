@@ -131,7 +131,7 @@ def create_songs():
 
 @app.route("/create-accounts")
 def create_accounts():
-    sql.createTable('accounts', {'id': 'SERIAL', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL', 'auth': 'TEXT NOT NULL'})
+    sql.createTable('accounts')
     return 'Created Accounts'
 
 @app.route("/remove-songs")
@@ -168,6 +168,10 @@ def auth_token_used(token):
 def user_data(token):
     return sql.select('accounts', f"auth = '{token}'")
 
+tables = {
+    'accounts': {'id': 'SERIAL', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL', 'auth': 'TEXT NOT NULL'}
+}
+
 class SQL:
     def __init__(self):
         self.conn = psycopg2.connect(
@@ -189,8 +193,9 @@ class SQL:
         """)
         self.conn.commit()
 
-    def createTable(self, name, columns: dict):
+    def createTable(self, name):
         text = []
+        columns = tables[name]
         for n, val in columns.items():
             text.append(f'{n} {val}')
         text = ',\n'.join(text)
@@ -225,7 +230,7 @@ class SQL:
         retList = []
         for s in self.cur.fetchall():
             row = {}
-            for (colname, cast), value in zip([desc[0] for desc in self.cur.description], s):
+            for (colname, cast), value in zip(tables[table].items(), s):
                 row.update({colname: self.typeCast(value, cast)[0]})
             retList.append(row)
         return retList

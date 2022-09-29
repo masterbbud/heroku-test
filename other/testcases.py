@@ -20,7 +20,3 @@ print(response.text)
 response = requests.post('https://masterbbud-python-test.herokuapp.com/get-account-data', json={'token': token})
 
 print(response.text)
-
-response = requests.get('https://masterbbud-python-test.herokuapp.com/test-columns')
-
-print(response.text)
