@@ -70,6 +70,10 @@ class SQL:
         self.cur.fetchall()
         return [desc for desc in self.cur.description]
 
+    def resetCursor(self):
+        self.cur.execute("ROLLBACK")
+        self.conn.commit()
+
     def typeCast(self, val, typeString):
         # returns a value, typecast via typeString, and also the type
         if 'TEXT' in typeString:
