@@ -45,8 +45,8 @@ def sql_test():
 
 @app.route("/add-song")
 def add_song():
-    args = {x:y for x,y in request.args[:2]}
-    sql.addSong(args['name'])
+    if request.args.get('name', None):
+        sql.addSong(request.args.get('name'))
     return ''
 
 @app.route("/get-songs")
