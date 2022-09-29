@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 app = flask.Flask(__name__)
 
-@app.route('/')
+@app.route('/main')
 def main():
     return 'Hello'
 
