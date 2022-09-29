@@ -5,7 +5,7 @@ import os
 
 import psycopg2
 
-#import sql
+import sql
  
 app = Flask(__name__)
  
@@ -59,4 +59,4 @@ def sql_test():
     SELECT * from newtable
     """)
     rows = cur.fetchall()
-    return rows
+    return rows + sql.testvar
