@@ -132,7 +132,7 @@ def create_songs():
 
 @app.route("/create-accounts")
 def create_accounts():
-    sql.createTable('accounts', {'id': 'SERIAL', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL'})
+    sql.createTable('accounts', {'id': 'SERIAL', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL', 'auth': 'TEXT NOT NULL'})
     return 'Created Accounts'
 
 @app.route("/remove-songs")
