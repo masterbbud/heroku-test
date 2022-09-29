@@ -36,4 +36,27 @@ def sql_test():
         database=os.environ['DB_DATABASE'],
         user=os.environ['DB_USER'],
         password=os.environ['DB_PASSWORD'])
-    return print(conn)
+    cur = conn.cursor()
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS newtable (
+    column1 INTEGER
+    );
+    """)
+    cur.execute("""
+    INSERT into newtable(column1)
+    VALUES (
+        5
+    );
+    """)
+    cur.execute("""
+    INSERT into newtable(column1)
+    VALUES (
+        5
+    );
+    """)
+    cur.execute("""
+    SELECT * from newtable
+    """)
+    rows = cur.fetchall()
+    return rows
