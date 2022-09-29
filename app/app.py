@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
  
 app = Flask(__name__)
  
@@ -8,4 +8,16 @@ def home_view():
 
 @app.route("/get-test")
 def get_test():
-    return "Get Response"
+    retDict = {
+        'users': [
+            {
+                'id': 1,
+                'name': 'brandon'
+            },
+            {
+                'id': 6,
+                'name': 'leah'
+            }
+        ]
+    }
+    return jsonify(retDict)
