@@ -98,6 +98,28 @@ def get_accounts():
 def drop_songs():
     return ''
 
+@app.route("/create-songs")
+def create_songs():
+    sql.createTable('songs', {'id': 'SERIAL', 'name': 'TEXT NOT NULL'})
+    return 'Created Songs'
+
+@app.route("/create-accounts")
+def create_accounts():
+    sql.createTable('accounts', {'id': 'SERIAL', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL'})
+    return 'Created Accounts'
+
+@app.route("/remove-songs")
+def remove_songs():
+    sql.dropTable('songs')
+    return 'Removed Songs'
+
+@app.route("/remove-accounts")
+def remove_accounts():
+    sql.dropTable('accounts')
+    return 'Removed Accounts'
+
+
+
 class User:
 
     users = {}
@@ -163,9 +185,9 @@ class SQL:
         self.cur = self.conn.cursor()
         self.tables = {} # tablename : {val: type, val: type}
         #self.dropTable('songs')
-        self.createTable('songs', {'id': 'SERIAL', 'name': 'TEXT NOT NULL'})
+        #self.createTable('songs', {'id': 'SERIAL', 'name': 'TEXT NOT NULL'})
         #self.dropTable('accounts')
-        self.createTable('accounts', {'id': 'SERIAL', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL'})
+        #self.createTable('accounts', {'id': 'SERIAL', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL'})
         
     def dropTable(self, name):
         self.cur.execute(f"""
