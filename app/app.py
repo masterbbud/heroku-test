@@ -13,6 +13,7 @@ from flask_bcrypt import Bcrypt
 import secrets
 
 # Something that will reset the cursor if you need to reconnect to the database
+# tables just disappear sometimes. wtf
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -165,7 +166,7 @@ def auth_token_used(token):
         return True if sql.select('accounts', f"auth = '{token}'") else False
     
 def user_data(token):
-    return sql.select('accounts', f"auth = {token}")
+    return sql.select('accounts', f"auth = '{token}'")
 
 class SQL:
     def __init__(self):

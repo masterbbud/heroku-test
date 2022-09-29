@@ -13,9 +13,9 @@ print(response.text)
 response = requests.get('https://masterbbud-python-test.herokuapp.com/sql-tables')
 
 print(response.text)
-response = requests.post('https://masterbbud-python-test.herokuapp.com/signup', json={'username': 'otheruser', 'password': 'lucy'})
+token = requests.post('https://masterbbud-python-test.herokuapp.com/signup', json={'username': 'newuser', 'password': 'lucy'}).text
 
-print(response.text)
+print(token)
 response = requests.get('https://masterbbud-python-test.herokuapp.com/sql-tables')
 
 print(response.text)
@@ -23,6 +23,10 @@ response = requests.get('https://masterbbud-python-test.herokuapp.com/get-accoun
 
 print(response.text)
 response = requests.get('https://masterbbud-python-test.herokuapp.com/sql-tables')
+
+print(response.text)
+
+response = requests.post('https://masterbbud-python-test.herokuapp.com/get-account-data', json={'token': token})
 
 print(response.text)
 
