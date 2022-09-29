@@ -163,9 +163,9 @@ class SQL:
         self.cur = self.conn.cursor()
         self.tables = {} # tablename : {val: type, val: type}
         #self.dropTable('songs')
-        self.createTable('songs', {'id': 'SERIAL PRIMARY KEY', 'name': 'TEXT NOT NULL'})
+        self.createTable('songs', {'id': 'SERIAL', 'name': 'TEXT NOT NULL'})
         #self.dropTable('accounts')
-        self.createTable('accounts', {'id': 'SERIAL PRIMARY KEY', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL'})
+        self.createTable('accounts', {'id': 'SERIAL', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL'})
         
     def dropTable(self, name):
         self.cur.execute(f"""
