@@ -11,7 +11,7 @@ app.secret_key = os.environ['SECRET_KEY']
 tables = {
     'accounts': {'id': 'SERIAL', 'username': 'TEXT NOT NULL', 'password': 'TEXT NOT NULL', 'auth': 'TEXT NOT NULL'},
     'songs': {'id': 'SERIAL', 'title': 'TEXT NOT NULL', 'artist': 'TEXT', 'image': 'TEXT', 'spotify': 'TEXT', 'itunes': 'TEXT', 'youtube': 'TEXT', 'tidal': 'TEXT', 'amazonMusic': 'TEXT', 'soundcloud': 'TEXT', 'youtubeMusic': 'TEXT'},
-    'posts': {'id': 'SERIAL', 'userid': 'INTEGER', 'datetime': 'TEXT', 'songid': 'INTEGER', 'caption': 'TEXT', 'likes': 'INTEGER'},
+    'posts': {'id': 'SERIAL', 'userid': 'INTEGER', 'dt': 'TEXT', 'songid': 'INTEGER', 'caption': 'TEXT', 'likes': 'INTEGER'},
     #'friends': {'id': 'SERIAL', 'user': 'INTEGER', 'following': 'INTEGER'}
     'friends': {'id': 'SERIAL', 'userid': 'INTEGER', 'following': 'INTEGER'}
 }
