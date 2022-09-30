@@ -1,6 +1,6 @@
 from flask import jsonify, request
 
-from app.accounts import auth_token_used
+sql = None
 
 def error(errortype, data=None, e=None):
     if data and e:
@@ -27,3 +27,11 @@ def stripArgs(*names):
         kvpairs[arg] = val
     
     return True, kvpairs
+
+def auth_token_used(token):
+    # check this
+    res = sql.select('accounts', f"auth = '{token}'")
+    if res['type'] == 'error' or not res['data']:
+        return False
+    return True
+

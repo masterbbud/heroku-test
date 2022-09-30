@@ -38,6 +38,10 @@ import app.tables as tables
 
 tables.sql = sql
 
+import app.utils as utils
+
+utils.sql = sql
+
 @app.route("/create-table", methods=['POST'])
 def create_table(): return tables.create_table()
 

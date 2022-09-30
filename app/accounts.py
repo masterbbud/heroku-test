@@ -3,7 +3,7 @@ from flask_bcrypt import Bcrypt
 
 import secrets
 
-from app.utils import stripArgs, error, success
+from app.utils import stripArgs, error, success, auth_token_used
 
 sql = None
 
@@ -91,10 +91,3 @@ def account_data():
 
 def get_auth_token():
     return secrets.token_urlsafe(20)
-
-def auth_token_used(token):
-    # check this
-    res = sql.select('accounts', f"auth = '{token}'")
-    if res['type'] == 'error' or not res['data']:
-        return False
-    return True
