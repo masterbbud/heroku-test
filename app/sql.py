@@ -47,7 +47,7 @@ class SQL:
                 {text});
             """)
         except:
-            return self.rollback('create '+name)
+            return self.rollback('create '+name+' '+text)
         self.conn.commit()
         return 'Created table '+name
     
