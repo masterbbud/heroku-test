@@ -31,7 +31,7 @@ class SQL:
                 DROP TABLE IF EXISTS {name}
             """)
         except:
-            return self.rollback()
+            return self.rollback('drop '+name)
         self.conn.commit()
 
     def createTable(self, name):
@@ -46,7 +46,7 @@ class SQL:
                 {text});
             """)
         except:
-            return self.rollback()
+            return self.rollback('create '+name)
         self.conn.commit()
     
     def insert(self, table, columns: dict):
@@ -62,7 +62,7 @@ class SQL:
             )
             """)
         except:
-            return self.rollback()
+            return self.rollback('insert '+table+' '+str(columns))
         self.conn.commit()
 
     def select(self, table, where=None):
@@ -76,7 +76,7 @@ class SQL:
                     SELECT * from {table}
                 """)
         except:
-            return self.rollback()
+            return self.rollback('select '+table+' '+str(where))
         retList = []
         for s in self.cur.fetchall():
             row = {}
@@ -91,7 +91,7 @@ class SQL:
                 SELECT * from {table}
             """)
         except:
-            return self.rollback()
+            return self.rollback('column names '+table)
         self.cur.fetchall()
         return [desc for desc in self.cur.description]
 
@@ -107,7 +107,7 @@ class SQL:
             return datetime(val), datetime
         return val, NoneType
 
-    def rollback(self):
+    def rollback(self, data: str):
         self.cur.execute('ROLLBACK')
         self.conn.commit()
-        return 'ERROR: Bad request'
+        return 'ERROR: Bad request - ' + data
