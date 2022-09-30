@@ -66,8 +66,8 @@ class SQL:
                 {valsText}
             )
             """)
-        except:
-            return self.rollback('insert '+table+' '+str(columns))
+        except Exception as e:
+            return self.rollback('insert '+table+' '+str(columns), e)
         self.conn.commit()
 
     def select(self, table, where=None):
