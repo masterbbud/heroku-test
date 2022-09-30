@@ -35,7 +35,7 @@ def get_posts():
     queryResult = sql.select('friends', f"userid = {id}")
     if queryResult['type'] == 'error':
         return queryResult
-    for userid in queryResult:
+    for userid in queryResult['data']:  
         sel = sql.select('posts', f"userid = {userid['following']}")
         if sel['type'] == 'error':
             return sel
