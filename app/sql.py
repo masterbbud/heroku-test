@@ -4,15 +4,25 @@ from types import NoneType
 
 import psycopg2
 
+from urllib.parse import urlparse
+
 tables = None
 
 class SQL:
     def __init__(self):
+        uri = os.environ['DATABASE_URL']
+        result = urlparse(uri)
+        username = result.username
+        password = result.password
+        database = result.path[1:]
+        hostname = result.hostname
+        port = result.port
         self.conn = psycopg2.connect(
-            host=os.environ['DB_HOST'],
-            database=os.environ['DB_DATABASE'],
-            user=os.environ['DB_USER'],
-            password=os.environ['DB_PASSWORD'])
+            host=hostname,
+            database=database,
+            user=username,
+            password=password,
+            port=port)
         self.cur = self.conn.cursor()
         
     def dropTable(self, name):
@@ -101,4 +111,3 @@ class SQL:
         self.cur.execute('ROLLBACK')
         self.conn.commit()
         return 'ERROR: Bad request'
-        
