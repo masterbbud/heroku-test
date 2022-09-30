@@ -26,7 +26,7 @@ def login():
     if not acc['data']:
         return error('No account')
 
-    if bcrypt.check_password_hash(acc[0]['password'], password):
+    if bcrypt.check_password_hash(acc['data'][0]['password'], password):
         return success(acc['data'][0]['auth'])
     else:
         return error('Incorrect password')
