@@ -46,8 +46,8 @@ class SQL:
             CREATE TABLE IF NOT EXISTS {name} (
                 {text});
             """)
-        except:
-            return self.rollback('create '+name+' '+text)
+        except Exception as e:
+            return self.rollback('create '+name+' '+text, e)
         self.conn.commit()
         return 'Created table '+name
     
@@ -109,7 +109,7 @@ class SQL:
             return datetime(val), datetime
         return val, NoneType
 
-    def rollback(self, data: str):
+    def rollback(self, data: str, e=None):
         self.cur.execute('ROLLBACK')
         self.conn.commit()
-        return 'ERROR: Bad request - ' + data
+        return 'ERROR: Bad request - ' + data + str(e)
