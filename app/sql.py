@@ -47,7 +47,10 @@ class SQL:
                 {text});
             """)
         except Exception as e:
-            return self.rollback('create '+name+' '+text, e)
+            return self.rollback(f"""
+            CREATE TABLE IF NOT EXISTS {name} (
+                {text});
+            """, e)
         self.conn.commit()
         return 'Created table '+name
     
