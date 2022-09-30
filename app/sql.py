@@ -110,7 +110,7 @@ class SQL:
         elif 'BOOLEAN' in typeString:
             return bool(val), bool
         elif 'TIMESTAMP' in typeString:
-            return datetime.strptime(val, r"%y-%m-%d %H:%M:%S.%f"), datetime
+            return datetime.strptime(val, r"%Y-%m-%d %H:%M:%S.%f"), datetime
         return val, NoneType
 
     def rollback(self, data: str, e=None):
