@@ -30,8 +30,8 @@ def createPost(user, songid, caption):
         'caption': caption,
         'likes': 0
     }
-    sql.insert('posts', sendDict)
-    return 'Created Post'
+    ret = sql.insert('posts', sendDict)
+    return 'Created Post ' + ret
 
 def get_posts_request():
     args = request.json
