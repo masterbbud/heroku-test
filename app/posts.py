@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask import request
 
-from accounts import auth_token_used
+from app.accounts import auth_token_used
 
 sql = None
 
