@@ -20,7 +20,7 @@ def create_post_request():
     if not caption:
         return 'ERROR: Request needs caption'
     user = sql.select('accounts', f"auth = '{auth}'")[0]['id']
-    createPost(user, songid, caption)
+    return createPost(user, songid, caption)
 
 def createPost(user, songid, caption):
     sendDict = {
