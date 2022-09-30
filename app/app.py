@@ -67,6 +67,16 @@ def create_accounts():
     sql.createTable('accounts')
     return 'Created Accounts'
 
+@app.route("/create-posts")
+def create_posts():
+    sql.createTable('posts')
+    return 'Created Posts'
+
+@app.route("/create-friends")
+def create_friends():
+    sql.createTable('friends')
+    return 'Created Friends'
+
 @app.route("/remove-songs")
 def remove_songs():
     sql.dropTable('songs')
@@ -76,6 +86,16 @@ def remove_songs():
 def remove_accounts():
     sql.dropTable('accounts')
     return 'Removed Accounts'
+    
+@app.route("/remove-posts")
+def remove_posts():
+    sql.dropTable('posts')
+    return 'Removed Posts'
+
+@app.route("/remove-friends")
+def remove_friends():
+    sql.dropTable('friends')
+    return 'Removed Friends'
 
 @app.route("/login", methods=['POST'])
 def login():
