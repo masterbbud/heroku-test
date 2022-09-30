@@ -69,6 +69,7 @@ class SQL:
         except Exception as e:
             return self.rollback('insert '+table+' '+str(columns), e)
         self.conn.commit()
+        return table
 
     def select(self, table, where=None):
         try:

@@ -29,9 +29,6 @@ print(requests.post('https://masterbbud-python-test.herokuapp.com/get-table', js
 token = requests.post('https://masterbbud-python-test.herokuapp.com/login', json={'username': 'onemore', 'password': 'lucy'}).text
 
 print(token)
-response = requests.get('https://masterbbud-python-test.herokuapp.com/get-accounts')
-
-print(response.text)
 
 response = requests.post('https://masterbbud-python-test.herokuapp.com/account-data', json={'token': token})
 
