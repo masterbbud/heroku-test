@@ -4,7 +4,7 @@ import requests
 
 from flask import request
 
-from utils import stripArgs, error, success
+from app.utils import stripArgs, error, success
 
 services = ['spotify', 'itunes', 'youtube', 'tidal', 'amazonMusic', 'soundcloud', 'youtubeMusic']
 
@@ -93,4 +93,3 @@ def getSong(id):
         if res['data']:
             return res['data'][0]
     return None
-    

@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 
 import inspect
 
-from utils import error, success
+from app.utils import error, success
 
 tables = None
 

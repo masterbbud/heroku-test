@@ -4,7 +4,7 @@ from flask import request
 
 from app.accounts import auth_token_used
 
-from utils import success, stripArgs
+from app.utils import success, stripArgs
 
 sql = None
 

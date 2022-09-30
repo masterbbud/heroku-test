@@ -3,7 +3,7 @@ from flask_bcrypt import Bcrypt
 
 import secrets
 
-from utils import stripArgs, error, success
+from app.utils import stripArgs, error, success
 
 sql = None
 
