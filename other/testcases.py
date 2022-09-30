@@ -17,9 +17,6 @@ print(requests.post('https://masterbbud-python-test.herokuapp.com/create-table',
 print(requests.post('https://masterbbud-python-test.herokuapp.com/create-table', json={'name': 'posts'}).text)
 print(requests.post('https://masterbbud-python-test.herokuapp.com/create-table', json={'name': 'friends'}).text)
 """
-print(requests.post('https://masterbbud-python-test.herokuapp.com/drop-table', json={'name': 'posts'}).text)
-
-print(requests.post('https://masterbbud-python-test.herokuapp.com/create-table', json={'name': 'posts'}).text)
 
 print(requests.post('https://masterbbud-python-test.herokuapp.com/get-table', json={'name': 'accounts'}).text)
 print(requests.post('https://masterbbud-python-test.herokuapp.com/get-table', json={'name': 'songs'}).text)
@@ -41,7 +38,7 @@ response = requests.post('https://masterbbud-python-test.herokuapp.com/create-po
 
 print(response.text)
 
-response = requests.post('https://masterbbud-python-test.herokuapp.com/follow', json={'auth': token, 'following': 2})
+response = requests.post('https://masterbbud-python-test.herokuapp.com/follow', json={'auth': token, 'following': 1})
 
 print(response.text)
 

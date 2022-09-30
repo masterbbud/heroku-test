@@ -52,7 +52,7 @@ def getPosts(id):
         if isinstance(sel, str):
             return sel
         allPosts += sel
-    allPosts.sort(key = lambda x: x.dt)
+    allPosts.sort(key = lambda x: x['dt'])
     return allPosts
 
 def getFollowing(id):
