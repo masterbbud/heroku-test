@@ -69,10 +69,10 @@ def follow_request():
     return follow(sql.select('accounts', f"auth = '{auth}'")[0]['id'], following)
 
 def follow(user, following):
-    acc = sql.select('friends', f"user = {user} and following = {following}")
+    acc = sql.select('friends', f"userid = {user} and following = {following}")
     if acc:
         return 'ERROR: User already following'
-    sql.insert('friends', {'user': user, 'following': following})
+    sql.insert('friends', {'userid': user, 'following': following})
     return 'Followed successfully'
 
 def account_data():

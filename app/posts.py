@@ -44,7 +44,7 @@ def get_posts_request():
 
 def getPosts(id):
     allPosts = []
-    queryResult = sql.select('friends', f"user = {id}")
+    queryResult = sql.select('friends', f"userid = {id}")
     if isinstance(queryResult, str):
         return queryResult
     for userid in queryResult:
@@ -56,6 +56,6 @@ def getPosts(id):
     return allPosts
 
 def getFollowing(id):
-    result = sql.read(f'SELECT * FROM friends WHERE user = {id}')
+    result = sql.read(f'SELECT * FROM friends WHERE userid = {id}')
     return [i[2] for i in result]
 
