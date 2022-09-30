@@ -33,6 +33,7 @@ class SQL:
         except:
             return self.rollback('drop '+name)
         self.conn.commit()
+        return 'Dropped table '+name
 
     def createTable(self, name):
         text = []
@@ -48,6 +49,7 @@ class SQL:
         except:
             return self.rollback('create '+name)
         self.conn.commit()
+        return 'Created table '+name
     
     def insert(self, table, columns: dict):
         # columns should be columnName: value

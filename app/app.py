@@ -49,53 +49,29 @@ def follow():
 def get_posts():
     return posts.get_posts_request()
 
-@app.route("/get-songs")
-def get_songs():
-    return sql.select('songs')
+@app.route("/create-table", methods=['POST'])
+def create_table():
+    args = request.json
+    name = args.get('name')
+    if not name:
+        return 'ERROR: Request needs name'
+    return sql.createTable(name)
 
-@app.route("/get-accounts")
-def get_accounts():
-    return sql.select('accounts')
+@app.route("/drop-table", methods=['POST'])
+def drop_table():
+    args = request.json
+    name = args.get('name')
+    if not name:
+        return 'ERROR: Request needs name'
+    return sql.dropTable(name)
 
-@app.route("/create-songs")
-def create_songs():
-    sql.createTable('songs')
-    return 'Created Songs'
-
-@app.route("/create-accounts")
-def create_accounts():
-    sql.createTable('accounts')
-    return 'Created Accounts'
-
-@app.route("/create-posts")
-def create_posts():
-    sql.createTable('posts')
-    return 'Created Posts'
-
-@app.route("/create-friends")
-def create_friends():
-    sql.createTable('friends')
-    return 'Created Friends'
-
-@app.route("/remove-songs")
-def remove_songs():
-    sql.dropTable('songs')
-    return 'Removed Songs'
-
-@app.route("/remove-accounts")
-def remove_accounts():
-    sql.dropTable('accounts')
-    return 'Removed Accounts'
-    
-@app.route("/remove-posts")
-def remove_posts():
-    sql.dropTable('posts')
-    return 'Removed Posts'
-
-@app.route("/remove-friends")
-def remove_friends():
-    sql.dropTable('friends')
-    return 'Removed Friends'
+@app.route("/get-table", methods=['POST'])
+def get_table():
+    args = request.json
+    name = args.get('name')
+    if not name:
+        return 'ERROR: Request needs name'
+    return sql.select(name)
 
 @app.route("/login", methods=['POST'])
 def login():

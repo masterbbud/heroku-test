@@ -6,6 +6,11 @@ import requests
 #   If successful, the AUTH token for the specified account (either existing or new)
 #   ERROR: SomeMessage if the creation/login failed
 
+print(requests.post('https://masterbbud-python-test.herokuapp.com/create-table', json={'name': 'posts'}).text)
+print(requests.post('https://masterbbud-python-test.herokuapp.com/create-table', json={'name': 'friends'}).text)
+
+print(requests.post('https://masterbbud-python-test.herokuapp.com/get-table', json={'name': 'posts'}).text)
+print(requests.post('https://masterbbud-python-test.herokuapp.com/get-table', json={'name': 'friends'}).text)
 
 token = requests.post('https://masterbbud-python-test.herokuapp.com/login', json={'username': 'onemore', 'password': 'lucy'}).text
 
