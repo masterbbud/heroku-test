@@ -36,35 +36,5 @@ token = run('login', {'username': 'onemore', 'password': 'lucy'})
 
 songid = run('add-song', {'url': 'https://open.spotify.com/track/6V5iybikF6JLnCqxPpXZit?si=8d9658d2497544ac'})
 
-run('create-post', {'auth': token, 'songid': songid, 'caption': 'This is a post.'})
-run('get-posts', {'auth': token})
-
-quit()
-
-print(requests.post('https://masterbbud-python-test.herokuapp.com/get-table', json={'name': 'accounts'}).text)
-print(requests.post('https://masterbbud-python-test.herokuapp.com/get-table', json={'name': 'songs'}).text)
-print(requests.post('https://masterbbud-python-test.herokuapp.com/get-table', json={'name': 'posts'}).text)
-print(requests.post('https://masterbbud-python-test.herokuapp.com/get-table', json={'name': 'friends'}).text)
-
-token = requests.post('https://masterbbud-python-test.herokuapp.com/login', json={'username': 'onemore', 'password': 'lucy'}).text
-
-print(token)
-
-response = requests.post('https://masterbbud-python-test.herokuapp.com/account-data', json={'token': token})
-
-print(response.text)
-
-song = requests.post('https://masterbbud-python-test.herokuapp.com/add-song', json={'url': 'https://open.spotify.com/track/6V5iybikF6JLnCqxPpXZit?si=8d9658d2497544ac'}).text
-print(song)
-
-response = requests.post('https://masterbbud-python-test.herokuapp.com/create-post', json={'auth': token, 'songid': song, 'caption': 'This is a post.'})
-
-print(response.text)
-
-response = requests.post('https://masterbbud-python-test.herokuapp.com/follow', json={'auth': token, 'following': 1})
-
-print(response.text)
-
-response = requests.post('https://masterbbud-python-test.herokuapp.com/get-posts', json={'auth': token})
-
-print(response.text)
+run('create-post', {'auth': token, 'songid': songid, 'caption': 'I HAVE COME TO EAT YOUR FAMILY.'})
+run('get-posts', {'auth': token, 'limit': 2})

@@ -26,19 +26,21 @@ def create_post():
     return sql.insert('posts', sendDict)
 
 def get_posts():
-    args = stripArgs('auth')
+    args = stripArgs('auth', 'limit')
     if not args[0]:
         return args[1]
     auth = args[1]['auth']
+    limit = args[1]['limit']
     id = sql.select('accounts', f"auth = '{auth}'")['data'][0]['id']
     allPosts = []
     queryResult = sql.select('friends', f"userid = {id}")
     if queryResult['type'] == 'error':
         return queryResult
-    for userid in queryResult['data']:  
+    for userid in queryResult['data']:
         sel = sql.select('posts', f"userid = {userid['following']}")
         if sel['type'] == 'error':
             return sel
         allPosts += sel['data']
     allPosts.sort(key = lambda x: x['dt'])
+    allPosts = allPosts[:limit]
     return success(allPosts)
