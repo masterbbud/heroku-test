@@ -19,6 +19,7 @@ response = requests.post('https://masterbbud-python-test.herokuapp.com/account-d
 print(response.text)
 
 song = requests.post('https://masterbbud-python-test.herokuapp.com/add-song', json={'url': 'https://open.spotify.com/track/6V5iybikF6JLnCqxPpXZit?si=8d9658d2497544ac'}).text
+print(song)
 
 response = requests.post('https://masterbbud-python-test.herokuapp.com/create-post', json={'auth': token, 'songid': song, 'caption': 'This is a post.'})
 

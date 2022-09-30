@@ -24,7 +24,7 @@ def addSong(url):
 
     songid = int(resultDict['id'])
     if songExists(songid):
-        return 'ERROR: Song already exists'
+        return str(songid)
 
     title = resultDict['name']
     artist = resultDict['artists'][0]['name']
