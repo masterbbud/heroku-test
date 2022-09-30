@@ -6,6 +6,10 @@ import psycopg2
 
 from urllib.parse import urlparse
 
+import inspect
+
+from utils import error, success
+
 tables = None
 
 class SQL:
@@ -26,14 +30,14 @@ class SQL:
         self.cur = self.conn.cursor()
         
     def dropTable(self, name):
-        try:
-            self.cur.execute(f"""
-                DROP TABLE IF EXISTS {name}
-            """)
-        except:
-            return self.rollback('drop '+name)
+        query = f"""
+            DROP TABLE IF EXISTS {name}
+        """
+        result = self.tryExecute(query)
+        if result:
+            return result
         self.conn.commit()
-        return 'Dropped table '+name
+        return success(f'Dropped table {name}')
 
     def createTable(self, name):
         text = []
@@ -41,66 +45,53 @@ class SQL:
         for n, val in columns.items():
             text.append(f'{n} {val}')
         text = ',\n'.join(text)
-        try:
-            self.cur.execute(f"""
+        query = f"""
             CREATE TABLE IF NOT EXISTS {name} (
                 {text});
-            """)
-        except Exception as e:
-            return self.rollback(f"""
-            CREATE TABLE IF NOT EXISTS {name} (
-                {text});
-            """, e)
+        """
+        result = self.tryExecute(query)
+        if result:
+            return result
         self.conn.commit()
-        return 'Created table '+name
+        return success(f'Created table {name}')
     
     def insert(self, table, columns: dict):
         # columns should be columnName: value
         colsList = ', '.join(list(columns))
         valsList = [f"'{i}'" if isinstance(i, str) else f"{i}" for i in columns.values()]
         valsText = ',\n'.join(valsList)
-        try:
-            self.cur.execute(f"""
+        query = f"""
             INSERT into {table} ({colsList})
             VALUES (
                 {valsText}
             )
-            """)
-        except Exception as e:
-            return self.rollback('insert '+table+' '+str(columns), e)
+        """
+        result = self.tryExecute(query)
+        if result:
+            return result
         self.conn.commit()
-        return table
+        return success(f'Inserted into {table}')
 
     def select(self, table, where=None):
-        try:
-            if where:
-                self.cur.execute(f"""
-                    SELECT * from {table} where {where}
-                """)
-            else:
-                self.cur.execute(f"""
-                    SELECT * from {table}
-                """)
-        except:
-            return self.rollback('select '+table+' '+str(where))
+        if where:
+            query = f"""
+                SELECT * from {table} where {where}
+            """
+        else:
+            query = f"""
+                SELECT * from {table}
+            """
+        result = self.tryExecute(query)
+        if result:
+            return result
         retList = []
         for s in self.cur.fetchall():
             row = {}
             for (colname, cast), value in zip(tables[table].items(), s):
                 row.update({colname: self.typeCast(value, cast)[0]})
             retList.append(row)
-        return retList
+        return success(retList)
     
-    def selectColumns(self, table):
-        try:
-            self.cur.execute(f"""
-                SELECT * from {table}
-            """)
-        except:
-            return self.rollback('column names '+table)
-        self.cur.fetchall()
-        return [desc for desc in self.cur.description]
-
     def typeCast(self, val, typeString):
         # returns a value, typecast via typeString, and also the type
         if 'TEXT' in typeString:
@@ -116,4 +107,10 @@ class SQL:
     def rollback(self, data: str, e=None):
         self.cur.execute('ROLLBACK')
         self.conn.commit()
-        return 'ERROR: Bad request - ' + data + str(e)
+        return error('Bad Request', data, e)
+
+    def tryExecute(self, query):
+        try:
+            self.cur.execute(query)
+        except Exception as e:
+            return self.rollback(f'{inspect.stack()[1].function}\n{query}', e)

@@ -4,25 +4,18 @@ from flask import request
 
 from app.accounts import auth_token_used
 
+from utils import success, stripArgs
+
 sql = None
 
-def create_post_request():
-    args = request.json
-    auth = args.get('auth')
-    if not auth:
-        return 'ERROR: Request needs auth'
-    if not auth_token_used(auth):
-        return 'ERROR: Invalid token'
-    songid = args.get('songid')
-    if not songid:
-        return 'ERROR: Request needs songid'
-    caption = args.get('caption')
-    if not caption:
-        return 'ERROR: Request needs caption'
+def create_post():
+    args = stripArgs('auth', 'songid', 'caption')
+    if not args[0]:
+        return args[1]
+    auth = args[1]['auth']
+    songid = args[1]['songid']
+    caption = args[1]['caption']
     user = sql.select('accounts', f"auth = '{auth}'")[0]['id']
-    return createPost(user, songid, caption)
-
-def createPost(user, songid, caption):
     sendDict = {
         'userid': user,
         'dt': str(datetime.now()),
@@ -30,32 +23,22 @@ def createPost(user, songid, caption):
         'caption': caption,
         'likes': 0
     }
-    ret = sql.insert('posts', sendDict)
-    return 'Created Post ' + ret
+    return sql.insert('posts', sendDict)
 
-def get_posts_request():
-    args = request.json
-    auth = args.get('auth')
-    if not auth:
-        return 'ERROR: Request needs auth'
-    if not auth_token_used(auth):
-        return 'ERROR: Invalid token'
-    return getPosts(sql.select('accounts', f"auth = '{auth}'")[0]['id'])
-
-def getPosts(id):
+def get_posts():
+    args = stripArgs('auth')
+    if not args[0]:
+        return args[1]
+    auth = args[1]['auth']
+    id = sql.select('accounts', f"auth = '{auth}'")[0]['id']
     allPosts = []
     queryResult = sql.select('friends', f"userid = {id}")
-    if isinstance(queryResult, str):
+    if queryResult['type'] == 'error':
         return queryResult
     for userid in queryResult:
         sel = sql.select('posts', f"userid = {userid['following']}")
-        if isinstance(sel, str):
+        if sel['type'] == 'error':
             return sel
-        allPosts += sel
+        allPosts += sel['data']
     allPosts.sort(key = lambda x: x['dt'])
-    return allPosts
-
-def getFollowing(id):
-    result = sql.read(f'SELECT * FROM friends WHERE userid = {id}')
-    return [i[2] for i in result]
-
+    return success(allPosts)

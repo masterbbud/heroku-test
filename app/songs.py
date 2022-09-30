@@ -4,6 +4,8 @@ import requests
 
 from flask import request
 
+from utils import stripArgs, error, success
+
 services = ['spotify', 'itunes', 'youtube', 'tidal', 'amazonMusic', 'soundcloud', 'youtubeMusic']
 
 serviceToId = {service: f'ServiceButton {service} itemLinkButton {service}ItemLinkButton' for service in services}
@@ -11,30 +13,29 @@ serviceToId = {service: f'ServiceButton {service} itemLinkButton {service}ItemLi
 sql = None
 
 def add_song_request():
-    args = request.json
-    url = args.get('url')
-    if not url:
-        return 'ERROR: Request needs url'
-    return addSong(url)
+    args = stripArgs('url')
+    if not args[0]:
+        return args[1]
+    url = args[1]['url']
 
-def addSong(url):
     resultDict = getSongData(url)
     if not resultDict:
-        return 'ERROR: Songwhip query failed'
+        return error('Songwhip query failed')
 
     songid = int(resultDict['id'])
-    if songExists(songid):
-        return str(songid)
+    if not songExists(songid):
+        title = resultDict['name']
+        artist = resultDict['artists'][0]['name']
+        links, img = getLinksAndImage(resultDict['url'])
 
-    title = resultDict['name']
-    artist = resultDict['artists'][0]['name']
-    links, img = getLinksAndImage(resultDict['url'])
+        if not links or not img:
+            return error('Songwhip scraping failed')
 
-    if not links or not img:
-        return 'ERROR: Songwhip scraping failed'
+        res = createSong(songid, title, artist, img, links)
+        if res['type'] == 'error':
+            return res
 
-    createSong(songid, title, artist, img, links)
-    return str(songid)
+    return success(str(songid))
 
 def getSongData(url):
     res = requests.post('https://songwhip.com/', data=json.dumps({'url': url}))
@@ -80,13 +81,16 @@ def createSong(songid, title, artist, img, links):
     for i in services:
         if i in links:
             sendDict.update({i: links[i]})
-    sql.insert('songs', sendDict)
+    return sql.insert('songs', sendDict)
 
 def songExists(id):
-    return True if sql.select('songs', f"id={id}") else False
+    res = sql.select('songs', f"id={id}")
+    return True if res['type'] != 'error' and res['data'] else False
 
 def getSong(id):
     res = sql.select('songs', f"id={id}")
-    if res:
-        return res[0]
+    if res['type'] == 'success':
+        if res['data']:
+            return res['data'][0]
     return None
+    
