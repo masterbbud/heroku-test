@@ -1,5 +1,4 @@
 from datetime import datetime
-from winreg import QueryReflectionKey
 
 from flask import request
 
