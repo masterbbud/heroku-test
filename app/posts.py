@@ -6,6 +6,8 @@ from app.utils import success, stripArgs
 
 sql = None
 
+# check select calls for error
+
 def create_post():
     args = stripArgs('auth', 'songid', 'caption')
     if not args[0]:
@@ -13,7 +15,7 @@ def create_post():
     auth = args[1]['auth']
     songid = args[1]['songid']
     caption = args[1]['caption']
-    user = sql.select('accounts', f"auth = '{auth}'")[0]['id']
+    user = sql.select('accounts', f"auth = '{auth}'")['data'][0]['id']
     sendDict = {
         'userid': user,
         'dt': str(datetime.now()),
@@ -28,7 +30,7 @@ def get_posts():
     if not args[0]:
         return args[1]
     auth = args[1]['auth']
-    id = sql.select('accounts', f"auth = '{auth}'")[0]['id']
+    id = sql.select('accounts', f"auth = '{auth}'")['data'][0]['id']
     allPosts = []
     queryResult = sql.select('friends', f"userid = {id}")
     if queryResult['type'] == 'error':
