@@ -1,4 +1,5 @@
 from datetime import datetime
+from winreg import QueryReflectionKey
 
 from flask import request
 
@@ -44,8 +45,14 @@ def get_posts_request():
 
 def getPosts(id):
     allPosts = []
-    for userid in sql.select('friends', f"user = {id}"):
-        allPosts += sql.select('posts', f"userid = {userid['following']}")
+    queryResult = sql.select('friends', f"user = {id}")
+    if isinstance(queryResult, str):
+        return queryResult
+    for userid in queryResult:
+        sel = sql.select('posts', f"userid = {userid['following']}")
+        if isinstance(sel, str):
+            return sel
+        allPosts += sel
     allPosts.sort(key = lambda x: x.dt)
     return allPosts
 

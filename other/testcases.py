@@ -24,7 +24,7 @@ response = requests.post('https://masterbbud-python-test.herokuapp.com/create-po
 
 print(response.text)
 
-response = requests.post('https://masterbbud-python-test.herokuapp.com/follow', json={'user': 2, 'following': 2})
+response = requests.post('https://masterbbud-python-test.herokuapp.com/follow', json={'auth': token, 'following': 2})
 
 print(response.text)
 
