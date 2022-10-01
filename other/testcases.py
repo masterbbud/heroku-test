@@ -27,14 +27,22 @@ print(requests.post('https://masterbbud-python-test.herokuapp.com/create-table',
 print(requests.post('https://masterbbud-python-test.herokuapp.com/create-table', json={'name': 'friends'}).text)
 """
 
+#run('create-table', {'name': 'blocked'})
+
 run('get-table', {'name': 'accounts'})
 run('get-table', {'name': 'songs'})
 run('get-table', {'name': 'posts'})
 run('get-table', {'name': 'friends'})
+run('get-table', {'name': 'blocked'})
 
-token = run('login', {'username': 'onemore', 'password': 'lucy'})
-
+token = run('login', {'username': 'goodguy', 'password': 'lucy'})
+run('block', {'auth': token, 'blocking': 3})
 songid = run('add-song', {'url': 'https://open.spotify.com/track/6V5iybikF6JLnCqxPpXZit?si=8d9658d2497544ac'})
-
 run('create-post', {'auth': token, 'songid': songid, 'caption': 'I HAVE COME TO EAT YOUR FAMILY.'})
-run('get-posts', {'auth': token, 'limit': 2})
+run('get-posts', {'auth': token, 'limit': 10})
+#token = run('login', {'username': 'onemore', 'password': 'lucy'})
+
+#songid = run('add-song', {'url': 'https://open.spotify.com/track/6V5iybikF6JLnCqxPpXZit?si=8d9658d2497544ac'})
+
+#run('create-post', {'auth': token, 'songid': songid, 'caption': 'I HAVE COME TO EAT YOUR FAMILY.'})
+#run('get-posts', {'auth': token, 'limit': 2})

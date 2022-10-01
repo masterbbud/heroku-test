@@ -90,7 +90,7 @@ def follow_request():
         return res
     return success('Followed successfully')
 
-def unfollow_request():
+def block_request():
     """
     Removes the blocking user from following the auth'd user, then
     adds their id to a 'blocked' table so they can't follow again
