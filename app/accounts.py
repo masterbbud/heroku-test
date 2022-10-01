@@ -109,6 +109,11 @@ def block_request():
         return other
     if not len(other['data']):
         return error('No account found to block')
+    already = sql.select('blocked', f"userid = {user} and blocked = {blocking}")
+    if already['type'] == 'error':
+        return already
+    if len(already['data']):
+        return error('User already blocked')
     acc = sql.select('friends', f"userid = {blocking} and following = {user}")
     if acc['type'] == 'error':
         return acc
