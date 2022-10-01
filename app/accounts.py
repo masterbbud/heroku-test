@@ -84,7 +84,7 @@ def follow_request():
     if acc['type'] == 'error':
         return acc
     if len(acc['data']):
-        return error('User already following')
+        return error('User already following', acc['data'])
     res = sql.insert('friends', {'userid': user, 'following': following})
     if res['type'] == 'error':
         return res
