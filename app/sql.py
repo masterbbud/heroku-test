@@ -84,6 +84,7 @@ class SQL:
         result = self.tryExecute(query)
         if result:
             return result
+        self.conn.commit()
         return success('Deleted rows')
 
     def select(self, table, where=None):
