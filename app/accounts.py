@@ -126,6 +126,29 @@ def block_request():
         return res
     return success('Blocked successfully')
 
+def unfollow_request():
+    """
+    Removes the specified follower from the auth'd user's followers
+    """
+    args = stripArgs('auth', 'unfollowing')
+    if not args[0]:
+        return args[1]
+    auth = args[1]['auth']
+    unfollowing = args[1]['unfollowing']
+    res = sql.select('accounts', f"auth = '{auth}'")
+    if res['type'] == 'error':
+        return res
+    user = res['data'][0]['id']
+    already = sql.select('friends', f"userid = {user} and following = {unfollowing}")
+    if already['type'] == 'error':
+        return already
+    if not len(already['data']):
+        return error("User wasn't following")
+    delreq = sql.delete('friends', f"userid = {user} and following = {unfollowing}")
+    if delreq['type'] == 'error':
+        return delreq
+    return success('Unfollowed successfully')
+
 def account_data():
     args = stripArgs('auth')
     if not args[0]:

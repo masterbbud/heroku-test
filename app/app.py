@@ -61,6 +61,9 @@ def create_post(): return posts.create_post()
 @app.route("/follow", methods=['POST'])
 def follow(): return accounts.follow_request()
 
+@app.route("/unfollow", methods=['POST'])
+def unfollow(): return accounts.unfollow_request()
+
 @app.route("/block", methods=['POST'])
 def block(): return accounts.block_request()
 
