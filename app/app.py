@@ -13,7 +13,8 @@ tableCols = {
     'songs': {'id': 'SERIAL', 'title': 'TEXT NOT NULL', 'artist': 'TEXT', 'image': 'TEXT', 'spotify': 'TEXT', 'itunes': 'TEXT', 'youtube': 'TEXT', 'tidal': 'TEXT', 'amazonMusic': 'TEXT', 'soundcloud': 'TEXT', 'youtubeMusic': 'TEXT'},
     'posts': {'id': 'SERIAL', 'userid': 'INTEGER', 'dt': 'TIMESTAMP', 'songid': 'INTEGER', 'caption': 'TEXT', 'likes': 'INTEGER'},
     #'friends': {'id': 'SERIAL', 'user': 'INTEGER', 'following': 'INTEGER'}
-    'friends': {'id': 'SERIAL', 'userid': 'INTEGER', 'following': 'INTEGER'}
+    'friends': {'id': 'SERIAL', 'userid': 'INTEGER', 'following': 'INTEGER'},
+    'blocked': {'id': 'SERIAL', 'userid': 'INTEGER', 'blocked': 'INTEGER'}
 }
 
 import app.sql as sqlClass
@@ -59,6 +60,9 @@ def create_post(): return posts.create_post()
 
 @app.route("/follow", methods=['POST'])
 def follow(): return accounts.follow_request()
+
+@app.route("/block", methods=['POST'])
+def block(): return accounts.block_request()
 
 @app.route("/get-posts", methods=['POST'])
 def get_posts(): return posts.get_posts()

@@ -69,9 +69,17 @@ def follow_request():
     res = sql.select('accounts', f"auth = '{auth}'")
     if res['type'] == 'error':
         return res
-    if not len(res['data']):
-        return error('No account found to follow')
     user = res['data'][0]['id']
+    other = sql.select('accounts', f"id = {following}")
+    if other['type'] == 'error':
+        return other
+    if not len(other['data']):
+        return error('No account found to follow')
+    block = sql.select('blocked', f"userid = {following} and blocked = {user}")
+    if block['type'] == 'error':
+        return block
+    if len(block['data']):
+        return error('Follow request was blocked')
     acc = sql.select('friends', f"userid = {user} and following = {following}")
     if acc['type'] == 'error':
         return acc
@@ -81,6 +89,37 @@ def follow_request():
     if res['type'] == 'error':
         return res
     return success('Followed successfully')
+
+def unfollow_request():
+    """
+    Removes the blocking user from following the auth'd user, then
+    adds their id to a 'blocked' table so they can't follow again
+    """
+    args = stripArgs('auth', 'blocking')
+    if not args[0]:
+        return args[1]
+    auth = args[1]['auth']
+    blocking = args[1]['blocking']
+    res = sql.select('accounts', f"auth = '{auth}'")
+    if res['type'] == 'error':
+        return res
+    user = res['data'][0]['id']
+    other = sql.select('accounts', f"id = {blocking}")
+    if other['type'] == 'error':
+        return other
+    if not len(other['data']):
+        return error('No account found to block')
+    acc = sql.select('friends', f"userid = {blocking} and following = {user}")
+    if acc['type'] == 'error':
+        return acc
+    if len(acc['data']):
+        delreq = sql.delete('friends', f"userid = {blocking} and following = {user}")
+        if delreq['type'] == 'error':
+            return delreq
+    res = sql.insert('blocked', {'userid': user, 'blocked': blocking})
+    if res['type'] == 'error':
+        return res
+    return success('Blocked successfully')
 
 def account_data():
     args = stripArgs('auth')

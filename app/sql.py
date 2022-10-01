@@ -71,6 +71,20 @@ class SQL:
             return result
         self.conn.commit()
         return success(f'Inserted into {table}')
+    
+    def delete(self, table, where=None):
+        if where:
+            query = f"""
+                DELETE from {table} where {where}
+            """
+        else:
+            query = f"""
+                DELETE from {table}
+            """
+        result = self.tryExecute(query)
+        if result:
+            return result
+        return success('Deleted rows')
 
     def select(self, table, where=None):
         if where:
