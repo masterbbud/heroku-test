@@ -154,7 +154,10 @@ def account_data():
     if not args[0]:
         return args[1]
     auth = args[1]['auth']
-    return sql.select('accounts', f"auth = '{auth}'")
+    result = sql.select('accounts', f"auth = '{auth}'")
+    if not result['data']:
+        return result
+    return success(result['data'][0])
 
 def get_auth_token():
     return secrets.token_urlsafe(20)
