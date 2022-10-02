@@ -42,5 +42,5 @@ def get_posts():
             return sel
         allPosts += sel['data']
     allPosts.sort(key = lambda x: x['dt'])
-    allPosts = allPosts[:limit]
+    allPosts = allPosts[-limit:]
     return success(allPosts)
