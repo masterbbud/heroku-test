@@ -12,6 +12,13 @@ serviceToId = {service: f'ServiceButton {service} itemLinkButton {service}ItemLi
 
 sql = None
 
+def get_song_request():
+    args = stripArgs('songid')
+    if not args[0]:
+        return args[1]
+    songid = args[1]['songid']
+    return sql.select('songs', f"id = {songid}")['data'][0]
+
 def add_song_request():
     args = stripArgs('url')
     if not args[0]:

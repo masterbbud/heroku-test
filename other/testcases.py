@@ -37,7 +37,7 @@ run('get-table', {'name': 'blocked'})
 
 token = run('login', {'username': 'goodguy', 'password': 'lucy'})
 run('get-posts', {'auth': token, 'limit': 10})
-run('unfollow', {'auth': token, 'unfollowing': 1})
+run('follow', {'auth': token, ' following': 1})
 #songid = run('add-song', {'url': 'https://open.spotify.com/track/6V5iybikF6JLnCqxPpXZit?si=8d9658d2497544ac'})
 #run('create-post', {'auth': token, 'songid': songid, 'caption': 'I HAVE COME TO EAT YOUR FAMILY.'})
 run('get-posts', {'auth': token, 'limit': 10})

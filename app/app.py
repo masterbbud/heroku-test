@@ -52,6 +52,9 @@ def drop_table(): return tables.drop_table()
 @app.route("/get-table", methods=['POST'])
 def get_table(): return tables.get_table()
 
+@app.route("/get-song", methods=['POST'])
+def get_song(): return songs.get_song_request()
+
 @app.route("/add-song", methods=['POST'])
 def add_song(): return songs.add_song_request()
 
