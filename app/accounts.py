@@ -159,5 +159,15 @@ def account_data():
         return result
     return success(result['data'][0])
 
+def get_user():
+    args = stripArgs('id')
+    if not args[0]:
+        return args[1]
+    id = args[1]['id']
+    result = sql.select('accounts', f"id = {id}")
+    if not result['data']:
+        return result
+    return success(result['data'][0])
+
 def get_auth_token():
     return secrets.token_urlsafe(20)

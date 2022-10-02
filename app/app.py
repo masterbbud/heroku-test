@@ -81,3 +81,6 @@ def signup(): return accounts.signup()
 
 @app.route("/account-data", methods=['POST'])
 def account_data(): return accounts.account_data()
+
+@app.route("/get-user", methods=['POST'])
+def get_user(): return accounts.get_user()
