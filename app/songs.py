@@ -17,7 +17,7 @@ def get_song_request():
     if not args[0]:
         return args[1]
     songid = args[1]['songid']
-    return sql.select('songs', f"id = {songid}")['data'][0]
+    return success(sql.select('songs', f"id = {songid}")['data'][0])
 
 def add_song_request():
     args = stripArgs('url')
